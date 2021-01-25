@@ -207,3 +207,25 @@ class TriLineBarExpand {
         this.curr.startUpdating(cb)
     }
 }
+
+class Renderer {
+
+    tlbe : TriLineBarExpand = new TriLineBarExpand()
+    animator : Animator = new Animator()
+
+    render(context : CanvasRenderingContext2D) {
+        this.tlbe.draw(context)
+    }
+
+    handleTap(cb : Function) {
+        this.tlbe.startUpdating(() => {
+            this.animator.start(() => {
+                cb()
+                this.tlbe.update(() => {
+                    this.animator.stop()
+                    cb()
+                })
+            })
+        })
+    }
+}
