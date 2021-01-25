@@ -28,3 +28,42 @@ class ScaleUtil {
         return Math.sin(scale * Math.PI)
     }
 }
+
+class DrawingUtil {
+
+    static drawLine(context : CanvasRenderingContext2D, x1 : number, y1 : number, x2 : number, y2 : number) {
+        context.beginPath()
+        context.moveTo(x1, y1)
+        context.lineTo(x2, y2)
+        context.stroke()
+    }
+
+    static drawTriLineBarExpand(context : CanvasRenderingContext2D, scale : number) {
+        const sf : number = ScaleUtil.sinify(scale)
+        const sf1 : number = ScaleUtil.divideScale(sf, 0, parts)
+        const sf2 : number = ScaleUtil.divideScale(sf, 1, parts)
+        const sf3 : number = ScaleUtil.divideScale(sf, 2, parts)
+        context.save()
+        context.translate(w / 2, h)
+        for (var j = 0; j < 2; j++) {
+            context.save()
+            context.scale(1 - 2 * j, 1)
+            DrawingUtil.drawLine(context, -w / 2, 0, -w / 2 + w * 0.5 * sf1, -h * 0.5 * sf1)
+            DrawingUtil.drawLine(context, 0, 0, -w * 0.5 * sf2, 0)
+            context.save()
+            context.translate(-w / 2, 0)
+            context.fillRect(0, -h * 0.5 * sf3, w / 10, h * 0.5 * sf3)
+            context.restore()
+            context.restore()
+        }
+        context.restore()
+    }
+
+    static drawTLBRNode(context : CanvasRenderingContext2D, i : number, scale : number) {
+        context.strokeStyle = colors[i]
+        context.fillStyle = colors[i]
+        context.lineCap = 'round'
+        context.lineWidth = Math.min(w, h) / strokeFactor 
+        DrawingUtil.drawTriLineBarExpand(context, scale)
+    }
+}
